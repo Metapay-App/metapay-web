@@ -75,7 +75,15 @@ export function usePublic() {
   }, [paySymbol, targetSymbol, targetAmountInput]);
 
   useEffect(() => {
-    void runLiveQuote();
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) {
+        void runLiveQuote();
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, [runLiveQuote]);
 
   const handleConvertAddress = useCallback((value: string) => {

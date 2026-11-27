@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ethers } from "ethers";
 import {
   TOKENS_BY_SYMBOL,
@@ -57,17 +57,45 @@ export function usePortal() {
   const [cancelTarget, setCancelTarget] = useState<InvoiceItem | null>(null);
   const [cancelling, setCancelling] = useState(false);
 
-  const [recipientInput, setRecipientInput] = useState("");
+  const [recipientDraft, setRecipientDraft] = useState<string | null>(null);
+  const recipientInput = recipientDraft ?? address ?? "";
+  const setRecipientInput = useCallback((value: string) => {
+    setRecipientDraft(value);
+  }, []);
+
   const [targetSymbol, setTargetSymbol] = useState<TokenSymbol>("mUSDT");
   const [amountInput, setAmountInput] = useState("25");
   const [expiryType, setExpiryType] = useState<"FIXED" | "NO_LIMIT">("FIXED");
   const [expirySeconds, setExpirySeconds] = useState(3600);
   const [descriptionInput, setDescriptionInput] = useState("");
   const [enableSplits, setEnableSplits] = useState(false);
-  const [splitRows, setSplitRows] = useState<SplitDraftRow[]>([
-    { recipient: "", bps: "8000" },
-    { recipient: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC", bps: "2000" },
-  ]);
+
+  const [splitRowsDraft, setSplitRowsDraft] = useState<SplitDraftRow[] | null>(
+    null
+  );
+  const defaultSplitRows = useMemo<SplitDraftRow[]>(
+    () => [
+      { recipient: address ?? "", bps: "8000" },
+      { recipient: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC", bps: "2000" },
+    ],
+    [address]
+  );
+  const splitRows = splitRowsDraft ?? defaultSplitRows;
+  const setSplitRows = useCallback(
+    (
+      updater:
+        | SplitDraftRow[]
+        | ((prev: SplitDraftRow[]) => SplitDraftRow[])
+    ) => {
+      setSplitRowsDraft((prev) =>
+        typeof updater === "function"
+          ? updater(prev ?? defaultSplitRows)
+          : updater
+      );
+    },
+    [defaultSplitRows]
+  );
+
   const [creatingInvoice, setCreatingInvoice] = useState(false);
   const [createdInvoice, setCreatedInvoice] = useState<InvoiceItem | null>(null);
 
@@ -85,7 +113,14 @@ export function usePortal() {
   const [http402Loading, setHttp402Loading] = useState(false);
 
   // Settings / Merchant / Faucet state
-  const [merchantNameInput, setMerchantNameInput] = useState("");
+  const [merchantNameDraft, setMerchantNameDraft] = useState<string | null>(
+    null
+  );
+  const merchantNameInput = merchantNameDraft ?? merchantProfile?.name ?? "";
+  const setMerchantNameInput = useCallback((value: string) => {
+    setMerchantNameDraft(value);
+  }, []);
+
   const [freshApiKey, setFreshApiKey] = useState<string | null>(null);
   const [savingMerchant, setSavingMerchant] = useState(false);
   const [wrapAmountInput, setWrapAmountInput] = useState("5");
@@ -95,23 +130,6 @@ export function usePortal() {
     tone: "success" | "error" | "info";
     message: string;
   } | null>(null);
-
-  useEffect(() => {
-    if (address && !recipientInput) {
-      setRecipientInput(address);
-      setSplitRows((prev) =>
-        prev.map((row, idx) =>
-          idx === 0 && !row.recipient ? { ...row, recipient: address } : row
-        )
-      );
-    }
-  }, [address, recipientInput]);
-
-  useEffect(() => {
-    if (merchantProfile && !merchantNameInput) {
-      setMerchantNameInput(merchantProfile.name);
-    }
-  }, [merchantProfile, merchantNameInput]);
 
   const fetchInvoices = useCallback(async () => {
     setInvoicesLoading(true);
