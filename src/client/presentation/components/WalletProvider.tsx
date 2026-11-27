@@ -109,12 +109,12 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   }, [address, hydrateAddressState]);
 
   useEffect(() => {
-    setHasProvider(hasInjectedWallet());
     let active = true;
 
     getConnectedWalletSnapshot()
       .then((snap) => {
         if (!active) return;
+        setHasProvider(hasInjectedWallet());
         setAddress(snap.address);
         setChainId(snap.chainId);
         if (snap.address) {

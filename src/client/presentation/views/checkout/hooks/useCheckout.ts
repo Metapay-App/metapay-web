@@ -73,7 +73,15 @@ export function useCheckout(refId: string) {
   }, [refId]);
 
   useEffect(() => {
-    void loadInvoice();
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) {
+        void loadInvoice();
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, [loadInvoice]);
 
   const selectedPayToken = TOKENS_BY_SYMBOL[paySymbol];
@@ -96,7 +104,15 @@ export function useCheckout(refId: string) {
   }, [invoice, selectedPayToken.address]);
 
   useEffect(() => {
-    void refreshQuote();
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) {
+        void refreshQuote();
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, [refreshQuote]);
 
   const maxPayWithSlippage = useMemo(() => {

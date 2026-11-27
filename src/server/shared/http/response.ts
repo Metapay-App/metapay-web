@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
 import { AppError } from "../errors/app-error";
 
 export function ok<T>(
@@ -31,7 +31,7 @@ export function handleApiError(error: unknown): NextResponse {
       {
         message: "Invalid request payload",
         code: "VALIDATION_ERROR",
-        details: error.flatten(),
+        details: z.flattenError(error),
       },
       { status: 422 }
     );

@@ -158,12 +158,14 @@ ME_HUB_REST_URL="http://118.175.0.249:1317"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-### 3. Generate Prisma Client & Push Schema
+### 3. Generate Prisma Client & Apply Migrations
 
 ```bash
 npm run prisma:generate
-npm run prisma:push
+npm run prisma:migrate:dev
 ```
+
+*(For quick schema prototyping without creating new migration files, you can also use `npm run prisma:push`, and `npm run prisma:studio` to inspect tables.)*
 
 ### 4. Start Development Server
 
@@ -189,12 +191,12 @@ Open `http://localhost:3000` (redirects/serves `/id` by default, or visit `/en` 
 
 ## Production Deployment Guide
 
-### 1. Provision PostgreSQL & Apply Schema
+### 1. Provision PostgreSQL & Apply Migrations
 
 ```bash
 export DATABASE_URL="postgresql://user:pass@host:5432/metapay?schema=public"
 npm run prisma:generate
-npm run prisma:push
+npm run prisma:migrate:deploy
 ```
 
 ### 2. Configure Production Environment Variables

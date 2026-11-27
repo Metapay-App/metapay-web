@@ -77,8 +77,15 @@ export function useAdmin() {
   }, []);
 
   useEffect(() => {
-    void fetchOverview();
-    void fetchRouter();
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (!active) return;
+      void fetchOverview();
+      void fetchRouter();
+    });
+    return () => {
+      active = false;
+    };
   }, [fetchOverview, fetchRouter]);
 
   const isRouterOwner =
