@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgba(0, 103, 255, 0.4);
+    color: #ffffff;
+  }
+}
+
+@layer components {
+  .harbor-canvas {
+    background-color: #000000;
+    background-image:
+      radial-gradient(
+        circle at 18% 12%,
+        rgba(0, 103, 255, 0.22) 0%,
+        rgba(52, 105, 183, 0.08) 28%,
+        transparent 55%
+      ),
+      radial-gradient(
+        circle at 82% 18%,
+        rgba(77, 145, 255, 0.16) 0%,
+        transparent 48%
+      ),
+      radial-gradient(
+        circle at 50% 88%,
+        rgba(52, 105, 183, 0.14) 0%,
+        transparent 50%
+      );
+  }
+
+  .glass-panel {
+    background: rgba(68, 68, 72, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .glass-card {
+    background: linear-gradient(
+      145deg,
+      rgba(68, 68, 72, 0.32) 0%,
+      rgba(0, 0, 0, 0.78) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22.0333px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .glass-card-glow {
+    background: linear-gradient(
+      145deg,
+      rgba(52, 105, 183, 0.22) 0%,
+      rgba(68, 68, 72, 0.28) 45%,
+      rgba(0, 0, 0, 0.85) 100%
+    );
+    border: 1px solid rgba(77, 145, 255, 0.45);
+    border-radius: 22.0333px;
+    box-shadow: inset 0px 0px 30px 2px rgba(77, 145, 255, 0.5);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .glass-input {
+    background: rgba(0, 0, 0, 0.58);
+    border: 1px solid rgba(219, 219, 219, 0.18);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 14px;
+    transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+  }
+
+  .glass-input::placeholder {
+    color: #808183;
+  }
+
+  .glass-input:hover:not(:disabled) {
+    border-color: rgba(219, 219, 219, 0.36);
+  }
+
+  .glass-input:focus-visible {
+    outline: none;
+    border-color: #0067ff;
+    box-shadow: 0 0 0 3px rgba(0, 103, 255, 0.35);
+    background: rgba(0, 0, 0, 0.76);
+  }
+
+  .glass-input:disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+  }
+
+  .harbor-btn-primary {
+    background-color: #0067ff;
+    color: #ffffff;
+    border: 1px solid rgba(77, 145, 255, 0.65);
+    border-radius: 10px;
+    font-weight: 700;
+    transition: background-color 160ms ease, transform 120ms ease, box-shadow 160ms ease, opacity 160ms ease;
+  }
+
+  .harbor-btn-primary:hover:not(:disabled) {
+    background-color: #3469b7;
+    box-shadow: 0 0 24px rgba(0, 103, 255, 0.45);
+  }
+
+  .harbor-btn-primary:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .harbor-btn-primary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(77, 145, 255, 0.55);
+  }
+
+  .harbor-btn-primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .harbor-btn-glass {
+    background-color: rgba(68, 68, 72, 0.42);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: background-color 160ms ease, border-color 160ms ease, transform 120ms ease, opacity 160ms ease;
+  }
+
+  .harbor-btn-glass:hover:not(:disabled) {
+    background-color: rgba(52, 105, 183, 0.36);
+    border-color: rgba(77, 145, 255, 0.6);
+  }
+
+  .harbor-btn-glass:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .harbor-btn-glass:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 103, 255, 0.45);
+  }
+
+  .harbor-btn-glass:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
