@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ExpiryType {
+  FIXED
+  NO_LIMIT
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  EXPIRED
+  CANCELLED
+}
+
+enum InvoiceSource {
+  DASHBOARD
+  API
+  HTTP_402
+}
+
+model Merchant {
+  id           String    @id @default(cuid())
+  walletAddress String   @unique
+  meAddress    String
+  meId         String?
+  name         String
+  apiKeyPrefix String    @unique
+  apiKeyHash   String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  invoices     Invoice[]
+
+  @@index([meAddress])
+}
+
+model Invoice {
+  id                 String        @id @default(cuid())
+  refId              String        @unique
+  merchantId         String?
+  merchant           Merchant?     @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+  recipientAddress   String
+  recipientMeAddress String
+  targetToken        String
+  targetAmount       String
+  expiryType         ExpiryType
+  expiresAt          DateTime?
+  splits             Json?
+  status             InvoiceStatus @default(PENDING)
+  source             InvoiceSource @default(DASHBOARD)
+  description        String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  transactions       Transaction[]
+
+  @@index([merchantId])
+  @@index([recipientAddress])
+  @@index([status])
+}
+
+model Transaction {
+  id               String   @id @default(cuid())
+  txHash           String   @unique
+  refId            String
+  invoiceId        String?
+  invoice          Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  payerAddress     String
+  payerMeAddress   String
+  recipientAddress String
+  payToken         String
+  payAmount        String
+  targetToken      String
+  targetAmount     String
+  isSplit          Boolean  @default(false)
+  splits           Json?
+  blockNumber      Int
+  chainId          Int
+  paidAt           DateTime
+  createdAt        DateTime @default(now())
+
+  @@index([refId])
+  @@index([payerAddress])
+  @@index([recipientAddress])
+  @@index([paidAt])
+}
+
+model Http402Receipt {
+  id           String   @id @default(cuid())
+  refId        String   @unique
+  txHash       String   @unique
+  endpoint     String
+  payerAddress String
+  verifiedAt   DateTime @default(now())
+}
